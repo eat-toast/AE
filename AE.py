@@ -10,7 +10,8 @@ from torchvision.utils import save_image
 
 
 # 미리 만들어둔 모델 불러오기
-from AE_model import encoder, decoder
+from utils.AE_model import encoder, decoder
+
 
 #  이미지를 저장할 폴더 생성
 if not os.path.exists('./AE_img'):
@@ -79,5 +80,5 @@ for epoch in range(num_epochs):
         save_image(pic, './AE_img/output_image_{}.png'.format(epoch))
 
 #  모델 저장
-torch.save(encoder.state_dict(), './encoder.pth')
-torch.save(decoder.state_dict(), './decoder.pth')
+torch.save(encoder.state_dict(), './weights/encoder.pth')
+torch.save(decoder.state_dict(), './weights/decoder.pth')

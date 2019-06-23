@@ -13,7 +13,8 @@ lcmap = colors.ListedColormap(['silver', '#FF99FF', '#8000FF', '#0000FF', '#0080
                                '#00FF00', '#FFFF00', '#FF8000', '#FF0000', 'darkgreen'])
 
 # 미리 만들어둔 모델 불러오기
-from AE_model import encoder, decoder
+from utils.AE_model import encoder2, decoder2
+from utils.make_fake_img import make_fake_img
 
 # 시각화
 from sklearn.manifold import TSNE
@@ -35,8 +36,8 @@ dataset = MNIST('./data', transform=img_transform)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 #  모델 설정
-encoder = encoder().cuda()
-decoder = decoder().cuda()
+encoder = encoder2().cuda()
+decoder = decoder2().cuda()
 
 #  모델 Optimizer 설정
 criterion = nn.MSELoss()
@@ -46,22 +47,6 @@ decoder_optimizer = torch.optim.Adam(decoder.parameters(), lr=learning_rate, wei
 
 #  fake_image 추가
 #  Mnist train 은 60,000개.  --> 이 중, 60개를 이상한 데이터로 추가하여 AE가 어떤 오류를 내 뱉는지 보자.
-
-
-def make_fake_img():
-    img_size = 28
-    n_fake_img = 60
-    fake_img = []
-    for i in range(n_fake_img):
-        fake_img.append(np.random.randn(img_size * img_size).reshape(1, img_size, img_size))
-
-    fake_img = torch.FloatTensor(fake_img)
-    fake_img = fake_img.view(60, 784)
-    fake_img = Variable(fake_img).cuda()
-
-    fake_label = np.array([10] * n_fake_img)
-    return fake_img, fake_label
-
 
 fake_img, fake_label = make_fake_img()
 
@@ -134,5 +119,5 @@ for epoch in range(num_epochs):
     fig.savefig('./AE+TSNE_img_LeakyReLU/' + str(epoch) + '.jpg')
     plt.close('all')
 
-torch.save(encoder.state_dict(), './encoder2.pth')
-torch.save(decoder.state_dict(), './decoder2.pth')
+torch.save(encoder.state_dict(), './weights/encoder_Leakey.pth')
+torch.save(decoder.state_dict(), './weights/decoder_Leakey.pth')

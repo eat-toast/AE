@@ -8,13 +8,16 @@ from torchvision.datasets import MNIST
 from matplotlib import colors
 import matplotlib.pyplot as plt
 import numpy as np
+# python - m visdom.server
+import visdom
 
 lcmap = colors.ListedColormap(['silver', '#FF99FF', '#8000FF', '#0000FF', '#0080FF', '#58FAF4',
                                '#00FF00', '#FFFF00', '#FF8000', '#FF0000', 'darkgreen'])
 
 
 # 미리 만들어둔 모델 불러오기
-from AE_model import encoder, decoder
+from utils.AE_model import encoder, decoder
+from utils.make_fake_img import make_fake_img
 
 # 시각화
 from sklearn.manifold import TSNE
@@ -53,23 +56,15 @@ decoder_optimizer = torch.optim.Adam( decoder.parameters(), lr=learning_rate, we
 #  fake_image 추가
 #  Mnist train 은 60,000개.  --> 이 중, 60개를 이상한 데이터로 추가하여 AE가 어떤 오류를 내 뱉는지 보자.
 
-
-def make_fake_img():
-    img_size = 28
-    n_fake_img = 60
-    fake_img  = []
-    for i in range(n_fake_img):
-        fake_img.append( np.random.randn(img_size * img_size).reshape(1, img_size, img_size) )
-
-    fake_img = torch.FloatTensor(fake_img)
-    fake_img = fake_img.view(60, 784)
-    fake_img = Variable(fake_img).cuda()
-
-    fake_label = np.array([10] * n_fake_img)
-    return fake_img, fake_label
-
-
 fake_img , fake_label = make_fake_img()
+
+#  loss 시각화
+vis = visdom.Visdom()
+layout_1 = dict(title="Normal_data")
+layout_2 = dict(title="anomaly_data")
+
+normal = vis.line(Y = [0], X = [0], opts =layout_1 )
+anomaly = vis.line(Y = [0], X = [0], opts =layout_2 )
 
 
 for epoch in range(num_epochs):
@@ -91,6 +86,7 @@ for epoch in range(num_epochs):
         decoder_optimizer.step()
     # ===================log========================
     print('epoch [{}/{}], loss:{:.4f}' .format(epoch + 1, num_epochs, float(loss.data) ))
+    vis.line(Y=[loss.data.cpu().numpy()], X=np.array([epoch]), win=normal, update='append')
 
     # <<<<<<<<<<<<<<<<비 정상 데이터>>>>>>>>>>>>>>>>>>
     # ===================forward=====================
@@ -107,7 +103,7 @@ for epoch in range(num_epochs):
     decoder_optimizer.step()
     # ===================log========================
     print('##### fake epoch [{}/{}], loss:{:.4f} #### '.format(epoch + 1, num_epochs, float(loss.data) ))
-
+    vis.line(Y=[loss.data.cpu().numpy()], X=np.array([epoch]), win=anomaly, update='append')
 
 
     #  ===================Latent Space 확인========================
@@ -143,5 +139,5 @@ for epoch in range(num_epochs):
     fig.savefig('./AE+TSNE_img/' +  str(epoch) + '.jpg')
     plt.close('all')
 
-torch.save(encoder.state_dict(), './encoder.pth')
-torch.save(decoder.state_dict(), './decoder.pth')
+torch.save(encoder.state_dict(), './weights/encoder_with_anomaly.pth')
+torch.save(decoder.state_dict(), './weights/decoder_with_anomaly.pth')
