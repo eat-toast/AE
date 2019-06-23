@@ -23,8 +23,8 @@ from utils.make_fake_img import make_fake_img
 from sklearn.manifold import TSNE
 
 
-if not os.path.exists('./AE+TSNE_img'):
-    os.mkdir('./AE+TSNE_img')
+if not os.path.exists('./imgs/AE+TSNE_img'):
+    os.mkdir('./imgs/AE+TSNE_img')
 
 
 img_transform = transforms.Compose([
@@ -136,7 +136,7 @@ for epoch in range(num_epochs):
     im = ax.scatter(xs, ys, cmap=lcmap, c=latent_label)
     fig.colorbar(im, ax=ax, ticks=range(11))
     ax.set_title('epoch:{}'.format(epoch))
-    fig.savefig('./AE+TSNE_img/' +  str(epoch) + '.jpg')
+    fig.savefig('./imgs/AE+TSNE_img/' +  str(epoch) + '.jpg')
     plt.close('all')
 
 torch.save(encoder.state_dict(), './weights/encoder_with_anomaly.pth')

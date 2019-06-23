@@ -4,18 +4,13 @@
 Dist plot으로 anomaly 데이터와 정상데이터가 구분이 되는지 확인
 '''
 
-import os
+
 import torch
-from torch import nn
-from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torchvision import transforms
 from torchvision.datasets import MNIST
-from torchvision.utils import save_image
-import numpy as np
 
-# python - m visdom.server
-import visdom
+import numpy as np
 
 #  미리 만들어둔 모델 불러오기
 from utils.AE_model import encoder, decoder
@@ -75,3 +70,10 @@ import matplotlib.pyplot as plt
 sns.distplot(origin, color="skyblue", label="origin")
 sns.distplot(fake, color="red", label="fake")
 plt.legend()
+
+
+#  궁금한 사항들
+#  1. AE 모델은 원본 + alpha * 노이즈(noise)를 어디까지 구분할 수 있을까? (alpha 변형해보면서 실험)
+#  2. anomaly 데이터가 많으면 잘 구분할 수 있을까?
+#  3. 모델별 성능의 차이가 있을까?
+#  4.

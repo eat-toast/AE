@@ -19,8 +19,8 @@ from utils.make_fake_img import make_fake_img
 # 시각화
 from sklearn.manifold import TSNE
 
-if not os.path.exists('./AE+TSNE_img_LeakyReLU'):
-    os.mkdir('./AE+TSNE_img_LeakyReLU')
+if not os.path.exists('./imgs/AE+TSNE_img_LeakyReLU'):
+    os.mkdir('./imgs/AE+TSNE_img_LeakyReLU')
 
 img_transform = transforms.Compose([
     transforms.ToTensor()
@@ -116,7 +116,7 @@ for epoch in range(num_epochs):
     im = ax.scatter(xs, ys, cmap=lcmap, c=latent_label)
     fig.colorbar(im, ax=ax, ticks=range(11))
     ax.set_title('epoch:{}'.format(epoch))
-    fig.savefig('./AE+TSNE_img_LeakyReLU/' + str(epoch) + '.jpg')
+    fig.savefig('./imgs/AE+TSNE_img_LeakyReLU/' + str(epoch) + '.jpg')
     plt.close('all')
 
 torch.save(encoder.state_dict(), './weights/encoder_Leakey.pth')
