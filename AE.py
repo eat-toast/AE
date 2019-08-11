@@ -29,7 +29,7 @@ img_transform = transforms.Compose([
 ])
 
 #  Hyper Parameter 설정
-num_epochs = 100
+num_epochs = 30
 batch_size = 128
 learning_rate = 1e-3
 
