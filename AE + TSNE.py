@@ -42,8 +42,8 @@ dataloader = DataLoader(dataset, batch_size=batch_size , shuffle=True)
 
 
 #  모델 설정
-encoder = encoder().cuda()
-decoder = decoder().cuda()
+encoder = encoder().cuda().train()
+decoder = decoder().cuda().train()
 
 
 #  모델 Optimizer 설정

@@ -36,8 +36,8 @@ dataset = MNIST('./data', transform=img_transform)
 dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
 #  모델 설정
-encoder = encoder2().cuda()
-decoder = decoder2().cuda()
+encoder = encoder2().cuda().train()
+decoder = decoder2().cuda().train()
 
 #  모델 Optimizer 설정
 criterion = nn.MSELoss()
