@@ -77,7 +77,7 @@ for epoch in range(num_epochs):
         pic = output.cpu().data
         pic = pic.view(pic.size(0), 1, 28, 28)
 
-        save_image(pic, './AE_img/output_image_{}.png'.format(epoch))
+        save_image(pic, './imgs/AE_img/output_image_{}.png'.format(epoch))
 
 #  모델 저장
 torch.save(encoder.state_dict(), './weights/encoder.pth')

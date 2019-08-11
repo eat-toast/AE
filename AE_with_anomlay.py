@@ -39,8 +39,8 @@ fake_img, _ = make_fake_img()
 
 #  모델 불러오기 - eval
 #  사용하는 모델은 AE + TNSE 에서 학습한 weight를 이용
-encoder = encoder().cuda().eval()
-decoder = decoder().cuda().eval()
+encoder = encoder().cuda().eval().eval() # 더이상 weight 가 변하지 않게 한다.
+decoder = decoder().cuda().eval().eval()
 encoder.load_state_dict(torch.load('./weights/encoder_with_anomaly.pth'))
 decoder.load_state_dict(torch.load('./weights/decoder_with_anomaly.pth'))
 
