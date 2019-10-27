@@ -62,6 +62,6 @@ im = ax.scatter(xs, ys, cmap=lcmap, c = latent_label )
 fig.colorbar(im, ax=ax, ticks = range(11))
 
 #  ax.set_title('epoch 100')
-#  fig.savefig('temp.jpg')
+#  fig.savefig('churn_predict.jpg')
 
 plt.show()
